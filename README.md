@@ -26,6 +26,17 @@ PMSys Data: Subjective, self-reported wellness data (e.g., mood, stress).
 ### 1.5 Development Strategy
 To ensure a robust and debuggable pipeline, all development, data wrangling, and feature engineering are being performed on a single, representative participant (p07) before any attempt to scale the solution to the full 16-participant cohort.
 
+### 1.6 Project Constraints & Assumptions
+This section outlines the key constraints and foundational assumptions under which this Minimum Viable Product (MVP) was developed. These boundaries are critical for interpreting the project's results and understanding its intended scope.
+
+#### 1.6.1 Constraints
+Academic Scope: This project is developed as a Minimum Viable Product (MVP) within the time constraints of the DSAI3301 course. The primary objective is to demonstrate a viable end-to-end data science workflow, not to produce a production-ready, clinically validated tool.
+
+"Frozen" Business Rules: The definitions for "High-Risk State" and the "Composite Risk Score" were treated as fixed, unchangeable business requirements for the purpose of this project. The engineering and modeling phases were focused exclusively on implementing these pre-defined rules.
+
+#### 1.6.2 Assumptions
+Validity of Business Rules: The project operates on the core assumption that the provided rule-based definition of a "High-Risk State" serves as a meaningful and useful proxy for a student's negative wellness state. The validity of this metric itself has not been tested or confirmed with clinical stakeholders. The model's success is measured by its ability to predict this proxy, not an externally validated clinical outcome.
+
 ## 2. Phase 1: Business Understanding (Stage Complete)
 This phase is considered complete and "frozen" for the scope of the MVP. The following definitions and business rules were established as the unchangeable foundation for all subsequent technical work.
 
