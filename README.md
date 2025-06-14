@@ -164,13 +164,13 @@ Upon completion of this plan, we will possess the final artifact of the data pre
 A comprehensive EDA was performed on the fully engineered, pre-modeling dataset.
 
 Key Finding 1: Subjective Feelings are the Strongest Predictors. Bivariate analysis showed a clear and powerful relationship between the subjective wellness columns and the target variable. Days with lower reported mood or higher fatigue were disproportionately followed by a high-risk week. This is the most significant finding from the EDA.
-<img src = "./figures/14thJune2025_p07_bivariate_cluster.png">
+<img src = "./figures/14thJune2025_p07_bivariate_cluster.png.png">
 
 Key Finding 2: Raw Physiological Signals are Weak Predictors. In contrast, the raw values for resting_heart_rate and activity minutes showed almost no discernible difference between the two target classes. Their predictive power, if any, will likely come from their deviation from the baseline or in complex interactions with other features.
 
 
 Key Finding 3: The Dataset is Well-Conditioned. The correlation heatmap revealed no strong multicollinearity between independent features. Univariate analysis confirmed that distributions were plausible, with no erroneous outliers requiring removal.
-<img src = "./figures/14thJune2025_p07_heatmap.png">
+<img src = "./figures/14thJune2025_p07_heatmap.png.png">
 
 Key Finding 4: The Target Class is Well-Balanced. The final target variable distribution was approximately 0: 81 and 1: 66, which is an excellent, nearly balanced ratio. This simplifies the modeling phase, as complex techniques to handle class imbalance are likely unnecessary.
 
