@@ -101,7 +101,7 @@ very_active_minutes_sum
 
 sedentary_minutes_sum
 
-## Phase 3: Data Wrangling & Feature Engineering 
+## Phase 4: Data Wrangling & Feature Engineering 
 This section documents the technical data processing pipeline built for participant p07.
 
 ### 4.1 Step 1: Data Parsing & Loading
@@ -127,31 +127,31 @@ Back-fill (bfill()): Fills any remaining NaNs (primarily at the start of the dat
 ### 4.4. Step 4: Baseline Calculation
 A function was implemented to calculate the rolling 14-day baselines for resting_heart_rate and avg_overall_sleep_score. To handle the initial 13-day period where a full rolling window is not available, the calculated NaN values were back-filled, a pragmatic decision to maximize data retention for the MVP.
 
-## Phase 4: Target Variable Engineering
+## Phase 5: Target Variable Engineering
 In any supervised machine learning project, the model learns the relationship between a set of input features (X) and a target variable (Y). Our current DataFrame contains the features (X). The task now is to create the target (Y).
 
-### 4.1 Logical Imperative: The Need for Proactivity
+### 5.1 Logical Imperative: The Need for Proactivity
 
 The core business problem is to move from a reactive to a proactive model of student care. A model that simply classifies a student's current risk state (Is_High_Risk_Today) has limited utility; by the time the data is processed and an alert is sent, the opportunity for early intervention may have passed. True proactivity requires forecasting. We need to give the counselor actionable lead time.
 
-### 4.2 Research and Domain Basis
+### 5.2 Research and Domain Basis
 
 The concept of a prediction horizon is well-established in clinical informatics and analogous fields like predictive maintenance. Research in early warning systems consistently demonstrates that their value is directly proportional to the lead time they provide. By defining our target as the likelihood of a high-risk state occurring within a future window (in our case, 7 days), we are framing the problem correctly. We are asking the model: "Based on the patterns observed today, what is the probability of a negative event sequence initiating sometime in the coming week?" This provides a clear, actionable window for a counselor to intervene before a crisis fully manifests.
 
-### 4.3 Step-by-Step Technical Execution Plan
+### 5.3 Step-by-Step Technical Execution Plan
 The engineering of our final target variable, Is_High_Risk_Next_7_Days, will be performed in a sequence of three logical, auditable steps.
 
-#### 4.3.1: Calculate the Composite_Risk_Score
+#### 5.3.1: Calculate the Composite_Risk_Score
 Action: A new column, Composite_Risk_Score, will be created by summing the Subjective_Distress_Score and the Physiological_Deviation_Score.
 
 Rationale (TDSP - Feature Engineering): This step finalizes the daily risk metric by aggregating the multi-modal signals as defined by the business rules. It transforms multiple, disparate indicators into a single, ordinal score that represents the total evidence of risk for a given day. This is a form of dimensionality reduction, simplifying the concept of "daily risk" into a single, computable value.
 
-#### 4.3.2: Identify the Daily High_Risk_State
+#### 5.3.2: Identify the Daily High_Risk_State
 Action: A new binary column, High_Risk_State, will be created. It will be assigned a value of 1 if the Composite_Risk_Score for that day is 3 or greater, and 0 otherwise.
 
 Rationale (TDSP - Data Understanding): This step operationalizes the risk score into a concrete, binary event. It answers the simple question: "On this specific day, did the student meet the criteria for a high-risk state?" This column provides a clear, daily ground truth and serves as the essential building block for our final predictive target.
 
-#### 4.3.3: Engineer the Predictive Target (Is_High_Risk_Next_7_Days)
+#### 5.3.3: Engineer the Predictive Target (Is_High_Risk_Next_7_Days)
 Action: This is the crucial time-series transformation. For each day d in our dataset, we will perform a "look-ahead" operation. We will examine the High_Risk_State column for the subsequent 7 days (i.e., the window from d+1 to d+7). If the maximum value within that future window is 1 (meaning at least one high-risk day occurred), the target variable Is_High_Risk_Next_7_Days for the original day d will be set to 1. Otherwise, it will be set to 0.
 
 Rationale (TDSP - Modeling Preparation): This action directly encodes the business requirement for a proactive, 7-day prediction horizon into the dataset itself. We are effectively shifting the "answer" from the future back to the present. This reframes the machine learning task from a simple daily classification to a forward-looking prediction. The model will be trained to find the subtle patterns in the features on a given day that are predictive of a problem emerging over the next week.
