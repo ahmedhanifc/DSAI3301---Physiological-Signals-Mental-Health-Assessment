@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def process_intraday_heart_rate(participant_id: str, key_name: str = "bpm",file_name: str = "heart_rate") -> pd.DataFrame:
     """
@@ -42,10 +43,11 @@ def load_resting_heart_rate(participant_id: str) -> pd.DataFrame:
     df['resting_heart_rate'] = df['value'].apply(lambda x: x.get('value'))
 
     # Select only the columns needed for the final merged dataset
+
+    df['resting_heart_rate'] = df['resting_heart_rate'].replace(0.0, np.nan)
     final_df = df[['dateTime', 'resting_heart_rate']].copy()
     
     # Handle days where data might be missing
-    final_df.dropna(subset=['resting_heart_rate'], inplace=True)
 
     return final_df
 
