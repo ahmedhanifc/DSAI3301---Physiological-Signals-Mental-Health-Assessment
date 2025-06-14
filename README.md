@@ -159,3 +159,27 @@ Rationale (TDSP - Modeling Preparation): This action directly encodes the busine
 Technical Note on Data Truncation: This look-ahead operation cannot be performed for the final 7 days of the dataset, as a full 7-day future window does not exist for them. These rows will have an invalid target and must be truncated from the dataset before it is passed to the model. This is a standard and required procedure in time-series forecasting to prevent data leakage and ensure the model only learns from valid, complete examples.
 
 Upon completion of this plan, we will possess the final artifact of the data preparation phase: a DataFrame containing the full set of features (X) and a corresponding predictive target vector (Y).
+
+## 6. Exploratory Data Analysis
+A comprehensive EDA was performed on the fully engineered, pre-modeling dataset.
+
+Key Finding 1: Subjective Feelings are the Strongest Predictors. Bivariate analysis showed a clear and powerful relationship between the subjective wellness columns and the target variable. Days with lower reported mood or higher fatigue were disproportionately followed by a high-risk week. This is the most significant finding from the EDA.
+<img src = "./figures/14thJune2025_p07_bivariate_cluster.png">
+
+Key Finding 2: Raw Physiological Signals are Weak Predictors. In contrast, the raw values for resting_heart_rate and activity minutes showed almost no discernible difference between the two target classes. Their predictive power, if any, will likely come from their deviation from the baseline or in complex interactions with other features.
+
+
+Key Finding 3: The Dataset is Well-Conditioned. The correlation heatmap revealed no strong multicollinearity between independent features. Univariate analysis confirmed that distributions were plausible, with no erroneous outliers requiring removal.
+<img src = "./figures/14thJune2025_p07_heatmap.png">
+
+Key Finding 4: The Target Class is Well-Balanced. The final target variable distribution was approximately 0: 81 and 1: 66, which is an excellent, nearly balanced ratio. This simplifies the modeling phase, as complex techniques to handle class imbalance are likely unnecessary.
+
+The data preparation and analysis phase is complete. We have successfully transformed raw data into a high-quality, feature-rich dataset. Our EDA has provided strong, data-driven hypotheses about which features will be most predictive.
+
+The project is now officially moving to the Modeling stage of the TDSP. The immediate next steps will be:
+
+Time-Series Split: Partition the 141-row dataset into training and testing sets using a time-ordered split.
+
+Baseline Model: Train a simple, interpretable model (e.g., Logistic Regression) to establish a baseline performance metric.
+
+Advanced Model: Train a more complex, non-linear model (e.g., Random Forest) to capture potential feature interactions and attempt to outperform the baseline.
