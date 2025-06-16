@@ -1,7 +1,8 @@
-# DSAI3301---Physiological-Signals-Mental-Health-Assessment
+# Project Documentation: Student Mental Health Risk Prediction 
 
-
-# Project Documentation: Student Risk Prediction MVP
+Author: Ahmed Hanif
+Date: June 14, 2025
+Version: 1.0.0
 
 Date: June 14, 2024
 
@@ -14,7 +15,13 @@ To develop a Minimum Viable Product (MVP) of a predictive model capable of proac
 University counseling services often operate in a reactive mode, addressing student issues only after they are self-reported or have escalated to a crisis. The core problem is an information lag between scheduled appointments, preventing timely and proactive intervention. This project aims to bridge that gap using passively collected data.
 
 ### 1.3  Methodology
-The project is being executed in strict accordance with the Team Data Science Process (TDSP) framework, ensuring a structured and repeatable workflow from business understanding through to deployment.
+This project is executed with a commitment to methodological rigor. Two foundational principles are critical for interpreting its results and understanding its scope:
+
+#### Principle 1: 
+The Target Variable is a Proxy, Not a Clinical Diagnosis. The "High-Risk State" defined in this project is an unvalidated, rule-based proxy metric, engineered from the available data to represent a potential negative wellness state. This project does not predict a clinical condition like depression or anxiety. The model's success is measured by its ability to accurately forecast this specific, pre-defined proxy. The clinical validation of this proxy is a crucial next step but is outside the scope of this MVP.
+
+#### Principle 2: 
+The Goal is Actionable Lead Time. The project's value is not in classifying a student's current state but in providing actionable lead time for intervention. Therefore, the entire analytical approach is framed as a forecasting problem: "Given the data up to today, what is the likelihood of a problem in the next seven days?" This proactive stance is encoded directly into the target variable.
 
 ### 1.4 Data Source
 The project utilizes the PMDATA dataset, a publicly available collection of multi-modal data. For this MVP, we are using a combination of:
@@ -187,10 +194,27 @@ Key Finding 4: The Target Class is Well-Balanced. The final target variable dist
 
 The data preparation and analysis phase is complete. We have successfully transformed raw data into a high-quality, feature-rich dataset. Our EDA has provided strong, data-driven hypotheses about which features will be most predictive.
 
-The project is now officially moving to the Modeling stage of the TDSP. The immediate next steps will be:
+## 7. Phase 6: Modeling 
+This phase focused on training and evaluating a suite of models to predict the target variable, Is_High_Risk_Next_7_Days. The primary goal was to identify a robust model that outperforms a simple baseline and meets the project's objective of proactive risk detection.
 
-Time-Series Split: Partition the 141-row dataset into training and testing sets using a time-ordered split.
+### 7.1 Methodology
+A comprehensive set of both classical time series models and machine learning classifiers were trained and evaluated.
 
-Baseline Model: Train a simple, interpretable model (e.g., Logistic Regression) to establish a baseline performance metric.
+Time-Ordered Split: The dataset was partitioned into training and testing sets using a chronological 80/20 split to ensure the model was trained on past data to predict future events.
 
-Advanced Model: Train a more complex, non-linear model (e.g., Random Forest) to capture potential feature interactions and attempt to outperform the baseline.
+Model Categories: Two distinct families of models were tested:
+Machine Learning Classifiers: A suite of standard classifiers was trained to predict the binary target. This included Logistic Regression, XGBoost, LightGBM, RandomForest, and others.
+Statistical Time Series Models: Traditional forecasting models like SARIMAX were also evaluated to determine their efficacy.
+Evaluation:
+Classifiers were evaluated based on Accuracy, Precision, Recall, and F1-Score to measure their effectiveness at identifying the "high-risk" class.
+Time series models were evaluated on regression metrics like MSE, MAE, and R-squared.
+
+### 7.2 Results and Key Findings
+The modeling phase produced clear and decisive results, pointing to a superior modeling approach for this specific problem.
+
+Finding 1: Machine Learning Classifiers are Highly Effective. The classifier models demonstrated significant predictive power. The top-performing models—LightGBM, XGBoost, and GradientBoosting—all achieved an accuracy of 0.64 on the test set. This confirms the EDA hypothesis that the feature set contains a strong, learnable signal.
+
+
+Finding 2: LightGBM Selected as the Champion Model. Among the top models, LightGBM emerged as the best choice for the MVP. It not only achieved high accuracy but also delivered the best balance of F1-Score (0.631) and Precision (0.624). High precision is critical to ensure the alerts sent to counselors are trustworthy.
+
+Finding 3: Classical Time Series Models are Unsuitable. The statistical time series models (SARIMAX) performed poorly, resulting in negative R-squared values, which indicates their predictions were worse than a naive mean-based forecast. These models struggled with the complexity and noise in the data, leading to multiple convergence warnings and errors during training. They have been ruled out for the remainder of the MVP

@@ -56,14 +56,14 @@ def calculate_rolling_baselines(df, columns, window_size, calculate_mean, calcul
             if calculate_mean:
                 column_name = f"{column}_{window_size}_mean"
                 df[column_name] = df[column].rolling(window_size).mean()
-                df[column_name] = df[column_name].bfill()
+                # df[column_name] = df[column_name].bfill()
                 
             if calculate_std:
                 column_name = f"{column}_{window_size}_std"
                 df[column_name] = df[column].rolling(window_size).std()
-                df[column_name] = df[column_name].bfill()
+                # df[column_name] = df[column_name].bfill()
             
-        
+    df = df.dropna()
 
     return df
 

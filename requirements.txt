@@ -2,3 +2,10 @@ pandas
 matplotlib
 seaborn
 numpy
+xgboost
+lightgbm
+scikit-learn
+statsmodels
+scipy
+prophet
+
