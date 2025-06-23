@@ -1,7 +1,7 @@
 # Project Documentation: Student Mental Health Risk Prediction 
 
 Author: Ahmed Hanif
-Date: June 14, 2025
+Date: June 17, 2025
 Version: 1.0.0
 
 Date: June 14, 2024
@@ -139,8 +139,7 @@ The five processed DataFrames were merged into a single master DataFrame (df_mer
 The merged DataFrame contained expected NaN values due to the nature of the data sources. A two-step imputation strategy was applied to create a dense, complete dataset:
 
 Forward-fill (ffill()): Propagates the last valid observation forward.
-
-Back-fill (bfill()): Fills any remaining NaNs (primarily at the start of the dataset) with the next valid observation
+The remaining missing values were dropped.
 
 ### 4.4. Step 4: Baseline Calculation
 A function was implemented to calculate the rolling 14-day baselines for resting_heart_rate and avg_overall_sleep_score. To handle the initial 13-day period where a full rolling window is not available, the calculated NaN values were back-filled, a pragmatic decision to maximize data retention for the MVP.

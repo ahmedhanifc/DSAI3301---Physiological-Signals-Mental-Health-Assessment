@@ -1,4 +1,56 @@
 import pandas as pd
+from functools import reduce
+
+
+from src.physiological_data_preprocessing import (
+        process_intraday_heart_rate,
+        process_resting_heart_rate,
+        get_daily_aggregate,
+        preprocess_exercise_data,
+        load_sleep_score,
+        load_resting_heart_rate
+)   
+from src.subjective_data_preprocessing import (
+    preprocess_wellness_csv,
+     
+)
+
+def create_merged_df(participant_id):
+    df = create_merged_dfs(participant_id)
+    df = forward_fill_missing_values(df)
+    df = df[["participant_id"] + df.iloc[:,:-1].columns.tolist()]
+
+    return df
+
+
+def forward_fill_missing_values(df):
+    df = df.copy()
+    for column in df.columns:
+        df[column] = df[column].ffill()
+
+    return df
+
+
+def create_merged_dfs(participant_id):
+    sleep_score_df = load_sleep_score(participant_id=participant_id)
+    wellness_df = preprocess_wellness_csv(participant_id)
+    resting_heart_rate_df = load_resting_heart_rate(participant_id)
+    very_active_minutes_df = get_daily_aggregate(participant_id,"very_active_minutes","sum")
+    sedentary_minutes_df = get_daily_aggregate(participant_id,"sedentary_minutes","sum")
+
+    dataframes_to_merge = [
+    resting_heart_rate_df,
+    sleep_score_df,
+    wellness_df,
+    very_active_minutes_df,
+    sedentary_minutes_df
+    ]
+
+    df_merged = reduce(lambda left, right: pd.merge(left, right, on='dateTime', how='outer'), dataframes_to_merge)
+    df_merged = df_merged.sort_values(by='dateTime').reset_index(drop=True)
+    df_merged["participant_id"] = participant_id
+
+    return df_merged
 
 
 def preprocess_srpe_data(participant_id):
