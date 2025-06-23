@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 from statsmodels.tsa.arima.model import ARIMA
 import numpy as np
 from datetime import datetime, timedelta
-from src.plots import plot_actual_vs_predicted_scatter, plot_actual_vs_predicted_timeseries, plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
+from src.plots import plot_actual_vs_predicted_scatter, plot_actual_vs_predicted_timeseries, plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve, plot_actual_vs_predicted_class_over_time
 
 
 
@@ -168,7 +168,7 @@ def train_time_series_models(models, X_train, y_train):
     return trained_time_series_models
 
 
-def evaluate_models(trained_models,X_test, y_test,model_type = "classification"):
+def evaluate_models(trained_models,X_test, y_test,model_type = "classification",y_train = None):
     """
     Evaluates trained models on the test data and calculates Mean Squared Error (MSE).
     Args:
@@ -271,6 +271,17 @@ def evaluate_models(trained_models,X_test, y_test,model_type = "classification")
             "roc_curve":        plot_roc_curve(y_test, proba, save_path=roc_path) if proba is not None else None,
             "pr_curve":         plot_precision_recall_curve(y_test, proba, save_path=prc_path) if proba is not None else None
             }
+
+            plot_actual_vs_predicted_class_over_time(
+                y_train,         # pd.Series, indexed by date
+                y_test,          # pd.Series, indexed by date
+                predictions,          # array-like, same length/index as y_test
+                x_label = "Date",
+                figsize=(10,8)
+                title="Actual vs Predicted High Risk State Over Time",
+                ylabel="High Risk State",
+                save_path=f"./figures/classification_performance/actual_vs_predicted_class_over_time_{model_name}.png"
+            )
             print("\nEvaluation complete.")
 
         else:

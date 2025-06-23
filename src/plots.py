@@ -546,3 +546,81 @@ def plot_ts_model_comparison(
 
     plt.show()
     return fig, ax
+
+def plot_actual_vs_predicted_class_over_time(
+    y_train,
+    y_test,
+    y_pred,
+    title="Actual vs Predicted Class Over Time",
+    xlabel="Date",
+    ylabel="Class",
+    figsize=(15, 5),
+    train_label="Actual (Train)",
+    test_label="Actual (Test)",
+    pred_label="Predicted (Test)",
+    save_path=None,
+    vline_color="#333333",
+    vline_style="--",
+    vline_width=2,
+    legend_fontsize=13,
+    title_fontsize=18,
+    label_fontsize=15,
+    tick_fontsize=12
+):
+    """
+    Plots actual vs predicted class over time, showing both training and testing periods with a clear separator.
+    Args:
+        y_train (pd.Series): Actual class labels for training period (indexed by date).
+        y_test (pd.Series): Actual class labels for test period (indexed by date).
+        y_pred (array-like): Predicted class labels for test period (same index as y_test).
+        title (str): Plot title.
+        xlabel (str): X-axis label.
+        ylabel (str): Y-axis label.
+        figsize (tuple): Figure size.
+        train_label (str): Legend label for training actuals.
+        test_label (str): Legend label for test actuals.
+        pred_label (str): Legend label for test predictions.
+        save_path (str): If provided, saves the figure to this path.
+        vline_color (str): Color for the train/test separator line.
+        vline_style (str): Style for the separator line.
+        vline_width (int): Width for the separator line.
+        legend_fontsize (int): Font size for legend.
+        title_fontsize (int): Font size for title.
+        label_fontsize (int): Font size for axis labels.
+        tick_fontsize (int): Font size for ticks.
+    """
+    plt.rcParams.update({
+        'figure.facecolor':'none',
+        'axes.facecolor':'white',
+        'savefig.facecolor':'none',
+        'font.family':'sans-serif'
+    })
+    fig, ax = plt.subplots(figsize=figsize)
+    # Plot training actuals
+    ax.plot(y_train.index, y_train.values, label=train_label, color="#0070C0", marker="o", linewidth=2, alpha=0.8)
+    # Plot test actuals
+    ax.plot(y_test.index, y_test.values, label=test_label, color="#229B5A", marker="o", linewidth=2, alpha=0.8)
+    # Plot test predictions
+    ax.plot(y_test.index, y_pred, label=pred_label, color="#ED7D31", marker="x", linewidth=2, alpha=0.8)
+    # Vertical line to separate train/test
+    if len(y_train) > 0 and len(y_test) > 0:
+        split_date = y_test.index[0]
+        ax.axvline(split_date, color=vline_color, linestyle=vline_style, linewidth=vline_width, alpha=0.7)
+        ax.text(split_date, ax.get_ylim()[1], 'Train/Test Split', color=vline_color, fontsize=legend_fontsize, va='bottom', ha='left', alpha=0.7)
+    ax.set_title(title, fontsize=title_fontsize, pad=15)
+    ax.set_xlabel(xlabel, fontsize=label_fontsize)
+    ax.tick_params(axis='x', rotation=45)
+    ax.set_ylabel(ylabel, fontsize=label_fontsize)
+    ax.legend(frameon=False, fontsize=legend_fontsize)
+    ax.grid(axis='y', color='#DDDDDD', linestyle='-', linewidth=0.8)
+    for spine in ['top','right']:
+        ax.spines[spine].set_visible(False)
+    for spine in ['bottom','left']:
+        ax.spines[spine].set_linewidth(1.2)
+    plt.xticks(fontsize=tick_fontsize)
+    plt.yticks(fontsize=tick_fontsize)
+    fig.tight_layout()
+    if save_path:
+        fig.savefig(save_path, transparent=True, bbox_inches='tight', dpi=300)
+    plt.show()
+    plt.close(fig)
